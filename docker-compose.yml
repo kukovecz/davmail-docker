@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  davmail:
+    image: davmail
+    build:
+      context: .
+    ports:
+      - "7007:1143" # imap
+      - "7008:1025" # smtp
+    volumes:
+      - type: bind
+        source: ./davmail
+        target: /app/davmail
+        read_only: True
+      - type: bind
+        source: ./davmail.properties
+        target: /app/davmail.properties
+        # Because the davmail binary modifies this file (keeps up the O365 exchange token)
+        read_only: False
+    restart: always
+    command: ["/app/davmail/davmail", "/app/davmail.properties"]
